@@ -1,0 +1,70 @@
+#!/usr/bin/env python
+# Mel - 2018-10-16 - display EDI X12 file in a more human readable way
+
+from pathlib import Path
+
+class X12(object):
+    """
+    Class for an X12 file requires the path/filename.
+    Replaces print of object with a more human readable X12
+    broken into one segment per line.
+    
+    attibutes:
+    filename - the file read
+    raw - the full unformatted X12
+    edix12 - Boolean: True if it appears to be X12 structure
+    fieldsep - the field separator - commonly '*'
+    segsep - the segment separator - commonly '~'
+    segments - list of segments with separator removed
+    """
+    
+    
+    def __init__(self,givenfile):
+        self.givenfile=givenfile
+        self.filename = Path(self.givenfile)
+        if not self.filename.is_file:
+            raise FileNotFoundError('Error: not a file: %s' % self.filename)
+        try:
+            with open(self.givenfile,'r') as onefile:
+                self.raw=onefile.read()
+        except IOError:
+            print('Error: could not read file: %s' % self.filename)
+        if self.raw[:3] == "ISA":
+            self.edix12=True
+        else:
+            self.edix12=False
+            self.fieldsep=''
+            self.segsep=''
+        if self.edix12:
+            self.fieldsep=self.raw[3]
+            pos=self.raw.find("GS",105)-1
+            maxback=pos-2
+            while (self.raw[pos]=='\n' or self.raw[pos]=='\r') and pos > maxback:
+                pos-=1
+            self.segsep=self.raw[pos]
+            self.segments=self.raw.split(self.segsep)
+            self.segments.remove('')
+    def __str__(self):
+        tabs=0
+        prettyx12=''
+        for seg in self.segments:
+            if seg[:2]=="GS" or seg[:2]=="ST":
+                tabs+=1
+            if seg[:2]=="SE":
+                tabs-=1
+            prettyx12=prettyx12+" "*(tabs*4)+seg+self.segsep+'\n'
+            if seg[:2]=="ST":
+                tabs+=1
+            if seg[:2]=="GE" or seg[:2]=="SE":
+                tabs-=1
+        return prettyx12
+        
+if __name__=='__main__':
+    import sys
+    arguments = len(sys.argv) - 1
+    position = 1
+    while (arguments >= position):
+        data=X12(sys.argv[position])
+        print(data)
+        position = position + 1
+    
