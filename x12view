@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Mel - 2018-10-16 - display EDI X12 file in a more human readable way
 # Mel - 2018-10-23 - fix x12 in MSDOS CR/LF problem
+# Mel - 2018-10-24 - add readable file check
 
 #import os.path
 from os.path import isfile
