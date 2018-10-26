@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Show X12 files and segement terminators
 # Mel - 2018-10-23 - Show Neal that there really is not such thing as a standard terminator
+# Mel - 2018-10-26 - fix indent
 
 from x12view import X12
 import os
@@ -11,9 +12,9 @@ for onearg in sys.argv[1:]:
         f = []
         for (dirpath, dirnames, filenames) in os.walk(onearg):
             f.extend(filenames)
-            for onefile in f:
-                data = X12(dirpath+'/'+onefile)
-                if data.edix12:
-                    print('File: %s  Segment terminator: %s' % (data.filename, data.segsep))
+        for onefile in f:
+            data = X12(dirpath+'/'+onefile)
+            if data.edix12:
+                print('File: %s  Segment terminator: %s' % (data.filename, data.segsep))
     else:
         print('Not a directory: %s' % onearg)

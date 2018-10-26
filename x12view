@@ -2,6 +2,7 @@
 # Mel - 2018-10-16 - display EDI X12 file in a more human readable way
 # Mel - 2018-10-23 - fix x12 in MSDOS CR/LF problem
 # Mel - 2018-10-24 - add readable file check
+# Mel - 2018-10-26 - remove testing line
 
 #import os.path
 from os.path import isfile
@@ -88,7 +89,6 @@ class X12(object):
 
 if __name__=='__main__':
     import sys
-    arguments = len(sys.argv) - 1
     for argument in sys.argv[1:]:
         data=X12(argument)
         print(data)
