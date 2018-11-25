@@ -36,10 +36,7 @@ class X12(object):
         self.fieldsep = ''
         self.segsep = ''
         self.segments = []
-        if isfile(self.filename):
-            self.isafile = True
-        else:
-            self.isafile = False
+        self.isafile = isfile(self.filename)
         if self.isafile:
             if access(self.filename, R_OK):
                 self.readable = True
